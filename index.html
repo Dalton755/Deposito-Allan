@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Depósito - Vendas e Fiado</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Venda web do depósito</h1>
+      <p>GitHub Pages + Google Sheets</p>
+    </div>
+    <div class="top-actions">
+      <button id="settingsBtn" class="secondary">Configurar</button>
+      <button id="connectBtn">Conectar planilha</button>
+      <button id="disconnectBtn" class="secondary hidden">Sair</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <aside class="side-panel">
+      <section class="card compact">
+        <h2>Status</h2>
+        <p id="statusText">Configure e conecte sua planilha para começar.</p>
+      </section>
+
+      <section class="card compact">
+        <h2>Modo</h2>
+        <div class="mode-buttons">
+          <button id="saleModeBtn" class="active">Venda</button>
+          <button id="creditModeBtn" class="secondary">Fiado</button>
+        </div>
+      </section>
+
+      <section class="card compact hidden" id="creditPanel">
+        <h2>Clientes em aberto</h2>
+        <label for="openClientsSelect">Cliente</label>
+        <select id="openClientsSelect">
+          <option value="__novo__">Novo cliente</option>
+        </select>
+        <div class="credit-buttons">
+          <button id="loadCreditBtn" class="secondary">Carregar</button>
+          <button id="receiveCreditBtn">Pago</button>
+        </div>
+        <p class="muted">No modo fiado você pode abrir um cliente, adicionar itens e salvar o saldo em aberto.</p>
+      </section>
+
+      <section class="card compact">
+        <h2>Total</h2>
+        <div class="grand-total" id="grandTotalDisplay">R$ 0,00</div>
+        <div class="muted" id="itemsCountDisplay">0 item(ns)</div>
+      </section>
+    </aside>
+
+    <section class="receipt-wrap">
+      <div class="receipt" id="receiptPaper">
+        <div class="receipt-header">
+          <img src="assets/logo.jpg" alt="Logo da loja" class="logo" />
+          <div class="store-title-block">
+            <h2 id="shopName">UNIVERSO DE DIVERSIDADES</h2>
+            <p>Recibo de venda / fiado</p>
+          </div>
+        </div>
+
+        <div class="receipt-meta-grid">
+          <div class="field-group wide">
+            <label>PEDIDO Nº</label>
+            <div class="field-box" id="orderNumber">-</div>
+          </div>
+          <div class="field-group">
+            <label>DATA</label>
+            <div class="field-box" id="currentDateTime">-</div>
+          </div>
+        </div>
+
+        <div class="receipt-meta-grid single">
+          <div class="field-group full">
+            <label>NOME</label>
+            <input id="customerName" type="text" placeholder="Nome do cliente" />
+          </div>
+        </div>
+
+        <div class="table-scroll">
+          <table class="receipt-table">
+            <thead>
+              <tr>
+                <th>QTD</th>
+                <th>DESCRIÇÃO</th>
+                <th>UNITÁRIO</th>
+                <th>TOTAL</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  <button id="addRowBtn" class="secondary add-row">+ adicionar item</button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="receipt-footer">
+          <div>
+            <span class="footer-label">Tipo atual:</span>
+            <strong id="currentModeText">Venda</strong>
+          </div>
+          <div class="actions">
+            <button id="newSaleBtn" class="secondary">Nova venda</button>
+            <button id="submitSaleBtn">Enviar</button>
+            <button id="saveCreditBtn" class="hidden">Salvar fiado</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <datalist id="productsList"></datalist>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="dialog-form" id="settingsForm">
+      <h3>Configurar integração</h3>
+      <label>Nome da loja
+        <input id="shopNameInput" type="text" placeholder="UNIVERSO DE DIVERSIDADES" />
+      </label>
+      <label>Google API Key
+        <input id="apiKeyInput" type="text" placeholder="AIza..." />
+      </label>
+      <label>Google OAuth Client ID
+        <input id="clientIdInput" type="text" placeholder="...apps.googleusercontent.com" />
+      </label>
+      <label>Spreadsheet ID
+        <input id="spreadsheetIdInput" type="text" placeholder="ID da planilha no Google Sheets" />
+      </label>
+      <p class="muted">Dica: importe a planilha modelo para o Google Sheets e cole aqui o ID que aparece na URL.</p>
+      <menu>
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button value="save">Salvar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="decisionDialog">
+    <div class="dialog-form">
+      <h3>Essa venda foi paga?</h3>
+      <p>Escolha como deseja registrar esse pedido.</p>
+      <menu class="stack-menu">
+        <button id="paidDecisionBtn">Sim, foi pago</button>
+        <button id="creditDecisionBtn" class="secondary">Não, vai para fiado</button>
+        <button id="cancelDecisionBtn" class="ghost">Cancelar</button>
+      </menu>
+    </div>
+  </dialog>
+
+  <dialog id="paymentDialog">
+    <form method="dialog" class="dialog-form" id="paymentForm">
+      <h3>Tipo de pagamento</h3>
+      <label>Selecione o tipo
+        <select id="paymentTypeSelect"></select>
+      </label>
+      <menu>
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button value="confirm">Confirmar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="partialDialog">
+    <form method="dialog" class="dialog-form" id="partialForm">
+      <h3>Pagamento parcial</h3>
+      <label>Valor pago agora
+        <input id="partialAmountInput" type="number" min="0" step="0.01" placeholder="0,00" />
+      </label>
+      <menu>
+        <button value="cancel" class="secondary">Cancelar</button>
+        <button value="confirm">Confirmar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
