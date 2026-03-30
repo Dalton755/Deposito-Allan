@@ -550,6 +550,43 @@ async function registerPaidSale(paymentType) {
   }
 }
 
+async function saveCreditDirectly() {
+  if (!state.sheetConnected) {
+    setStatus('Faça login primeiro.');
+    return;
+  }
+
+  try {
+    const record = buildRecordFromForm();
+    const now = formatDateTimeStorage(new Date());
+
+    const row = [
+      state.nextOrderNumber,
+      now,
+      record.customer,
+      record.quantity,
+      record.description,
+      record.total,
+      record.totalUnit,
+      0, // valor pago
+      record.total, // valor em aberto
+      now,
+      JSON.stringify(record.items),
+    ];
+
+    await appendValues('Fiado!A:K', [row]);
+    state.nextOrderNumber += 1;
+
+    await refreshOpenCredits();
+    resetForm();
+
+    setStatus('Fiado salvo com sucesso.');
+  } catch (error) {
+    console.error(error);
+    setStatus(error.message || 'Erro ao salvar fiado.');
+  }
+}
+
 async function handleSaveCredit() {
   if (!state.sheetConnected) {
     setStatus('Faça login primeiro.');
