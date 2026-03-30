@@ -104,10 +104,10 @@ function bindEvents() {
     const paymentType = await askPaymentType();
     if (paymentType) await registerPaidSale(paymentType);
   });
-  els.creditDecisionBtn.addEventListener('click', () => {
-    els.decisionDialog.close();
-    switchMode('credit');
-  });
+  els.creditDecisionBtn.addEventListener('click', async () => {
+  els.decisionDialog.close();
+  await saveCreditDirectly();
+});
   els.cancelDecisionBtn.addEventListener('click', () => els.decisionDialog.close());
 }
 
