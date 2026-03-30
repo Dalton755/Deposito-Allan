@@ -18,8 +18,34 @@
       <p>GitHub Pages + Google Sheets</p>
     </div>
     <div class="top-actions">
-      <button id="settingsBtn" class="secondary">Configurar</button>
-      <button id="connectBtn">Conectar planilha</button>
+      <div style="display:flex; gap:10px; align-items:center;">
+
+  <!-- BOTÃO CONFIG (ÍCONE) -->
+  <button id="configBtn" title="Configurações" style="
+    font-size:18px;
+    padding:8px 12px;
+    cursor:pointer;
+    border-radius:8px;
+    border:1px solid #ccc;
+    background:white;
+  ">
+    ⚙️
+  </button>
+
+  <!-- BOTÃO LOGIN -->
+  <button id="connectBtn" style="
+    padding:8px 14px;
+    background:#0d6efd;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+  ">
+    Fazer Login
+  </button>
+
+</div>
       <button id="disconnectBtn" class="secondary hidden">Sair</button>
     </div>
   </header>
