@@ -19,44 +19,210 @@
     </div>
 
     <div class="top-actions">
-      <button id="navVendaBtn" class="secondary nav-chip active-nav" type="button">Venda</button>
-      <button id="navRelatoriosBtn" class="secondary nav-chip" type="button">Relatórios</button>
-      <button id="navCaixaBtn" class="secondary nav-chip" type="button">Fluxo de caixa</button>
-
-      <button id="settingsBtn" class="secondary icon-button" type="button" title="Configurações" aria-label="Configurações">⚙</button>
+      <button id="settingsBtn" class="icon-button secondary" title="Configurações" type="button">⚙️</button>
       <button id="connectBtn" type="button">Fazer login</button>
       <button id="disconnectBtn" class="secondary hidden" type="button">Sair</button>
     </div>
   </header>
 
-  <main class="page">
-    <aside class="side-panel">
-      <section class="card compact">
-        <h2>Status</h2>
-        <p id="statusText">Configure e conecte sua planilha para começar.</p>
-      </section>
+  <nav class="main-nav">
+    <button id="navSaleBtn" class="nav-btn active" type="button">Venda</button>
+    <button id="navReportsBtn" class="nav-btn secondary" type="button">Relatórios de vendas</button>
+    <button id="navCashflowBtn" class="nav-btn secondary" type="button">Fluxo de caixa</button>
+  </nav>
 
-      <section class="card compact" id="modeCard">
-        <h2>Modo</h2>
-        <div class="mode-buttons">
-          <button id="saleModeBtn" class="active" type="button">Venda</button>
-          <button id="creditModeBtn" class="secondary" type="button">Fiado</button>
+  <main>
+    <section id="saleView" class="page">
+      <aside class="side-panel">
+        <section class="card compact">
+          <h2>Status</h2>
+          <p id="statusText">Configure e conecte sua planilha para começar.</p>
+        </section>
+
+        <section class="card compact">
+          <h2>Modo</h2>
+          <div class="mode-buttons">
+            <button id="saleModeBtn" class="active" type="button">Venda</button>
+            <button id="creditModeBtn" class="secondary" type="button">Fiado</button>
+          </div>
+        </section>
+
+        <section class="card compact hidden" id="creditPanel">
+          <h2>Clientes em aberto</h2>
+          <label for="openClientsSelect">Cliente</label>
+          <select id="openClientsSelect">
+            <option value="__novo__">Novo cliente</option>
+          </select>
+
+          <div class="credit-buttons">
+            <button id="loadCreditBtn" class="secondary" type="button">Carregar</button>
+            <button id="receiveCreditBtn" type="button">Pago</button>
+          </div>
+
+          <p class="muted">No modo fiado você pode abrir um cliente, adicionar itens e salvar o saldo em aberto.</p>
+        </section>
+
+        <section class="card compact">
+          <h2>Total</h2>
+          <div class="grand-total" id="grandTotalDisplay">R$ 0,00</div>
+          <div class="muted" id="itemsCountDisplay">0 item(ns)</div>
+        </section>
+      </aside>
+
+      <section class="receipt-wrap">
+        <div class="receipt" id="receiptPaper">
+          <div class="receipt-header">
+            <img
+              src="assets/logo.jpg"
+              alt="Logo da loja"
+              class="logo"
+              id="logoImg"
+            />
+            <div class="store-title-block">
+              <h2 id="shopName">UNIVERSO DE DIVERSIDADES</h2>
+              <p>Recibo de venda / fiado</p>
+            </div>
+          </div>
+
+          <div class="receipt-meta-grid">
+            <div class="field-group wide">
+              <label>PEDIDO Nº</label>
+              <div class="field-box" id="orderNumber">-</div>
+            </div>
+            <div class="field-group">
+              <label>DATA</label>
+              <div class="field-box" id="currentDateTime">-</div>
+            </div>
+          </div>
+
+          <div class="receipt-meta-grid single">
+            <div class="field-group full">
+              <label>NOME</label>
+              <input id="customerName" type="text" placeholder="Nome do cliente" />
+            </div>
+          </div>
+
+          <div class="table-scroll">
+            <table class="receipt-table">
+              <thead>
+                <tr>
+                  <th>QTD</th>
+                  <th>DESCRIÇÃO</th>
+                  <th>UNITÁRIO</th>
+                  <th>TOTAL</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="itemsBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5">
+                    <button id="addRowBtn" class="secondary add-row" type="button">+ adicionar item</button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="receipt-footer">
+            <div>
+              <span class="footer-label">Tipo atual:</span>
+              <strong id="currentModeText">Venda</strong>
+            </div>
+            <div class="actions">
+              <button id="newSaleBtn" class="secondary" type="button">Nova venda</button>
+              <button id="submitSaleBtn" type="button">Enviar</button>
+              <button id="saveCreditBtn" class="hidden" type="button">Salvar fiado</button>
+            </div>
+          </div>
         </div>
       </section>
+    </section>
 
-      <section class="card compact hidden" id="creditPanel">
-        <h2>Clientes em aberto</h2>
-        <label for="openClientsSelect">Cliente</label>
-        <select id="openClientsSelect">
-          <option value="__novo__">Novo cliente</option>
-        </select>
-        <div class="credit-buttons">
-          <button id="loadCreditBtn" class="secondary" type="button">Carregar</button>
-          <button id="receiveCreditBtn" type="button">Pago</button>
-        </div>
-        <p class="muted">No modo fiado você pode abrir um cliente, adicionar itens e salvar o saldo em aberto.</p>
-      </section>
+    <section id="reportsView" class="view-panel hidden">
+      <div class="view-card">
+        <h2>Relatórios de vendas</h2>
+        <p class="muted">Essa área será construída depois. O botão já foi preparado para a navegação.</p>
+      </div>
+    </section>
 
-      <section class="card compact" id="totalsCard">
-        <h2>Total</h2>
-        <div class="grand-total" id="grand
+    <section id="cashflowView" class="view-panel hidden">
+      <div class="view-card">
+        <h2>Fluxo de caixa</h2>
+        <p class="muted">Essa área será construída depois. O botão já foi preparado para a navegação.</p>
+      </div>
+    </section>
+  </main>
+
+  <datalist id="productsList"></datalist>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="dialog-form" id="settingsForm">
+      <h3>Configurar integração</h3>
+
+      <label>Nome da loja
+        <input id="shopNameInput" type="text" placeholder="UNIVERSO DE DIVERSIDADES" />
+      </label>
+
+      <label>Google API Key
+        <input id="apiKeyInput" type="text" placeholder="AIza..." />
+      </label>
+
+      <label>Google OAuth Client ID
+        <input id="clientIdInput" type="text" placeholder="...apps.googleusercontent.com" />
+      </label>
+
+      <label>Spreadsheet ID
+        <input id="spreadsheetIdInput" type="text" placeholder="ID da planilha no Google Sheets" />
+      </label>
+
+      <p class="muted">Dica: importe a planilha modelo para o Google Sheets e cole aqui o ID que aparece na URL.</p>
+
+      <menu>
+        <button value="cancel" class="secondary" type="submit">Cancelar</button>
+        <button value="save" type="submit">Salvar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="decisionDialog">
+    <div class="dialog-form">
+      <h3>Essa venda foi paga?</h3>
+      <p>Escolha como deseja registrar esse pedido.</p>
+      <menu class="stack-menu">
+        <button id="paidDecisionBtn" type="button">Sim, foi pago</button>
+        <button id="creditDecisionBtn" class="secondary" type="button">Não, vai para fiado</button>
+        <button id="cancelDecisionBtn" class="ghost" type="button">Cancelar</button>
+      </menu>
+    </div>
+  </dialog>
+
+  <dialog id="paymentDialog">
+    <form method="dialog" class="dialog-form" id="paymentForm">
+      <h3>Tipo de pagamento</h3>
+      <label>Selecione o tipo
+        <select id="paymentTypeSelect"></select>
+      </label>
+      <menu>
+        <button value="cancel" class="secondary" type="submit">Cancelar</button>
+        <button value="confirm" type="submit">Confirmar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="partialDialog">
+    <form method="dialog" class="dialog-form" id="partialForm">
+      <h3>Pagamento parcial</h3>
+      <label>Valor pago agora
+        <input id="partialAmountInput" type="number" min="0" step="0.01" placeholder="0,00" />
+      </label>
+      <menu>
+        <button value="cancel" class="secondary" type="submit">Cancelar</button>
+        <button value="confirm" type="submit">Confirmar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
