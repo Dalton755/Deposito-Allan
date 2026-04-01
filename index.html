@@ -1,1 +1,62 @@
-<!DOCTYPE html><html lang='pt-BR'><head><meta charset='UTF-8'><title>Depósito</title><link rel='stylesheet' href='styles.css'><script src='https://apis.google.com/js/api.js' onload='gapiLoaded()'></script><script src='https://accounts.google.com/gsi/client' onload='gisLoaded()'></script></head><body><header class='topbar'><div><h1>Venda web do depósito</h1></div><div class='top-actions'><button id='settingsBtn' class='icon-button'>⚙️</button><button id='connectBtn'>Fazer login</button><button id='disconnectBtn' class='hidden'>Sair</button></div></header><nav class='nav'><button onclick="showPage('venda')">Venda</button><button onclick="showPage('relatorio')">Relatórios</button><button onclick="showPage('caixa')">Fluxo de caixa</button></nav><section id='venda'><img src='assets/logo.jpg' class='logo'><input id='customerName' placeholder='Cliente'><table><tbody id='itemsBody'></tbody></table><button id='addRowBtn'>Adicionar</button><button id='submitSaleBtn'>Enviar</button></section><section id='relatorio' class='hidden'>Relatórios</section><section id='caixa' class='hidden'>Caixa</section><script src='app.js'></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Depósito - Vendas e Fiado</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Venda web do depósito</h1>
+      <p>GitHub Pages + Google Sheets</p>
+    </div>
+
+    <div class="top-actions">
+      <button id="navVendaBtn" class="secondary nav-chip active-nav" type="button">Venda</button>
+      <button id="navRelatoriosBtn" class="secondary nav-chip" type="button">Relatórios</button>
+      <button id="navCaixaBtn" class="secondary nav-chip" type="button">Fluxo de caixa</button>
+
+      <button id="settingsBtn" class="secondary icon-button" type="button" title="Configurações" aria-label="Configurações">⚙</button>
+      <button id="connectBtn" type="button">Fazer login</button>
+      <button id="disconnectBtn" class="secondary hidden" type="button">Sair</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <aside class="side-panel">
+      <section class="card compact">
+        <h2>Status</h2>
+        <p id="statusText">Configure e conecte sua planilha para começar.</p>
+      </section>
+
+      <section class="card compact" id="modeCard">
+        <h2>Modo</h2>
+        <div class="mode-buttons">
+          <button id="saleModeBtn" class="active" type="button">Venda</button>
+          <button id="creditModeBtn" class="secondary" type="button">Fiado</button>
+        </div>
+      </section>
+
+      <section class="card compact hidden" id="creditPanel">
+        <h2>Clientes em aberto</h2>
+        <label for="openClientsSelect">Cliente</label>
+        <select id="openClientsSelect">
+          <option value="__novo__">Novo cliente</option>
+        </select>
+        <div class="credit-buttons">
+          <button id="loadCreditBtn" class="secondary" type="button">Carregar</button>
+          <button id="receiveCreditBtn" type="button">Pago</button>
+        </div>
+        <p class="muted">No modo fiado você pode abrir um cliente, adicionar itens e salvar o saldo em aberto.</p>
+      </section>
+
+      <section class="card compact" id="totalsCard">
+        <h2>Total</h2>
+        <div class="grand-total" id="grand
